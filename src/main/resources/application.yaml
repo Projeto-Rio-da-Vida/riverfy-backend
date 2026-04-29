@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: riverfy-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/riverfy_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:minha_chave_secreta_super_segura_ierv_2026}

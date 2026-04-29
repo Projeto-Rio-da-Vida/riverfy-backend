@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  riverfy-db:
+    image: postgres:latest
+    container_name: postgres-riverfy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riverfy_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - riverfy_pg_data:/var/lib/postgresql/data
+    restart: no
+
+volumes:
+  riverfy_pg_data:
