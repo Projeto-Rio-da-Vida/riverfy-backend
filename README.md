@@ -65,7 +65,7 @@ A documentação Swagger poderá ser acessada em `http://localhost:8080/swagger-
 
 *   Victor Vale - Backend Developer
 *   Manoel Dionisio - Backend Developer
-*   Alyne Matos - Frontend Developer (Angular)
+*   Alyne Matos - Frontend Developer
 *   Leticya Oliveira - Requirements & UI/UX Designer (Figma)
 
 ## 📄 Licença
