@@ -1,6 +1,7 @@
 package br.com.riverfy.model;
 
 import br.com.riverfy.model.enums.UserRole;
+import br.com.riverfy.model.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +31,11 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -40,11 +45,10 @@ public class User extends BaseEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public User(String name, String email, String password, UserRole role) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
 
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
