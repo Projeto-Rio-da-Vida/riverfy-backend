@@ -5,6 +5,7 @@ import br.com.riverfy.dto.login.RegisterRequest;
 import br.com.riverfy.dto.login.TokenResponse;
 import br.com.riverfy.model.User;
 import br.com.riverfy.repository.UserRepository;
+import br.com.riverfy.secutiry.CustomUserDetails;
 import br.com.riverfy.secutiry.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,12 +30,18 @@ public class AuthService {
     }
 
     public TokenResponse login(LoginRequest loginRequest) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-        var springUser = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
 
-        User authenticatedUser = userRepository.findByEmail(springUser.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados."));
+        var authRequest = new UsernamePasswordAuthenticationToken(
+                loginRequest.email(),
+                loginRequest.password()
+        );
+
+        var auth = authenticationManager.authenticate(authRequest);
+
+        CustomUserDetails userDetails =
+                (CustomUserDetails) auth.getPrincipal();
+
+        User authenticatedUser = userDetails.getUser();
 
         String token = jwtService.generateToken(authenticatedUser);
 
@@ -52,8 +59,7 @@ public class AuthService {
         User newUser = new User(
                 registerRequest.name(),
                 registerRequest.email(),
-                encryptedPassword,
-                registerRequest.role()
+                encryptedPassword
         );
 
         userRepository.save(newUser);
