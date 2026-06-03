@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Users", description = "Operations related to user management (admin only)")
 @RestController
 @RequestMapping("/users")
@@ -39,11 +41,6 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Access denied - ADMIN only")
     })
     @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping
-//    public ResponseEntity<Page<UserResponse>> findAll(Pageable pageable) {
-//        return ResponseEntity.ok(service.findAll(pageable));
-//    }
-
     @GetMapping
     public Page<User> list(
             @RequestParam(required = false) String search,
@@ -99,5 +96,19 @@ public class UserController {
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         service.deactivateUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count-active")
+    public ResponseEntity<Long> countActiveMembers() {
+        return ResponseEntity.ok(
+                service.countActiveMembers()
+        );
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<User>> getRecentMembers() {
+        return ResponseEntity.ok(
+                service.getRecentMembers()
+        );
     }
 }
