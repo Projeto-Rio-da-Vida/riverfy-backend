@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -56,5 +58,14 @@ public class UserService {
         user.setStatus(UserStatus.INACTIVE);
 
         repository.save(user);
+    }
+
+    public long countActiveMembers() {
+        return repository.countByStatus(UserStatus.ACTIVE);
+    }
+
+
+    public  List<User> getRecentMembers() {
+        return this.repository.findTop5ByOrderByCreatedAtDesc();
     }
 }
