@@ -2,6 +2,7 @@ package br.com.riverfy.service;
 
 import br.com.riverfy.dto.event.EventRequest;
 import br.com.riverfy.dto.event.EventResponse;
+import br.com.riverfy.exception.ResourceNotFoundException;
 import br.com.riverfy.model.Event;
 import br.com.riverfy.model.User;
 import br.com.riverfy.model.enums.EventStatus;
@@ -57,14 +58,14 @@ public class EventService {
     @Transactional(readOnly = true)
     public EventResponse findById(Long id) {
         Event event = eventRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com o ID: " + id));
         return EventResponse.fromEntity(event);
     }
 
     @Transactional
     public EventResponse update(Long id, EventRequest request) {
         Event event = eventRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com o ID: " + id));
 
         request.updateEntity(event);
 
@@ -80,7 +81,7 @@ public class EventService {
     @Transactional
     public void delete(Long id) {
         Event event = eventRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com o ID: " + id));
 
         event.setActive(false);
     }

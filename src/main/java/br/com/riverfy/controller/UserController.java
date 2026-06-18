@@ -1,6 +1,5 @@
 package br.com.riverfy.controller;
 
-import br.com.riverfy.dto.login.UserResponse;
 import br.com.riverfy.model.User;
 import br.com.riverfy.service.UserService;
 

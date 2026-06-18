@@ -5,9 +5,9 @@ import br.com.riverfy.dto.devotional.DevotionalResponse;
 import br.com.riverfy.model.enums.DevotionalStatus;
 import br.com.riverfy.service.DevotionalService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Devotionals", description = "Endpoints for managing devotionals and their multi-page content.")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/devotionals")
 public class DevotionalController {

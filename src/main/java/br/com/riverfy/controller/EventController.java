@@ -5,9 +5,9 @@ import br.com.riverfy.dto.event.EventResponse;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Events", description = "Endpoints for managing events and participants.")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/events")
 public class EventController {
 
