@@ -2,6 +2,7 @@ package br.com.riverfy.service;
 
 import br.com.riverfy.dto.notice.NoticeRequest;
 import br.com.riverfy.dto.notice.NoticeResponse;
+import br.com.riverfy.exception.ResourceNotFoundException;
 import br.com.riverfy.model.Notice;
 import br.com.riverfy.repository.NoticeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,14 +43,14 @@ public class NoticeService {
     @Transactional(readOnly = true)
     public NoticeResponse findById(Long id) {
         Notice notice = noticeRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Notice not found with ID: " + id));
         return NoticeResponse.fromEntity(notice);
     }
 
     @Transactional
     public NoticeResponse update(Long id, NoticeRequest request) {
         Notice notice = noticeRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Notice not found with ID: " + id));
 
         request.updateEntity(notice);
 
@@ -60,7 +61,7 @@ public class NoticeService {
     @Transactional
     public void delete(Long id) {
         Notice notice = noticeRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Notice not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Notice not found with ID: " + id));
 
         notice.setActive(false);
     }

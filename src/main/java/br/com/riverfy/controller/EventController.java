@@ -5,7 +5,6 @@ import br.com.riverfy.dto.event.EventResponse;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -3,6 +3,7 @@ package br.com.riverfy.service;
 import br.com.riverfy.dto.devotional.DevotionalPageRequest;
 import br.com.riverfy.dto.devotional.DevotionalRequest;
 import br.com.riverfy.dto.devotional.DevotionalResponse;
+import br.com.riverfy.exception.ResourceNotFoundException;
 import br.com.riverfy.model.Devotional;
 import br.com.riverfy.model.DevotionalPage;
 import br.com.riverfy.model.enums.DevotionalStatus;
@@ -58,7 +59,7 @@ public class DevotionalService {
     @Transactional(readOnly = true)
     public DevotionalResponse findById(Long id) {
         Devotional devotional = devotionalRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Devotional not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Devotional not found with ID: " + id));
         return DevotionalResponse.fromEntity(devotional);
     }
 
@@ -67,7 +68,7 @@ public class DevotionalService {
         validatePagesRules(request.pages());
 
         Devotional devotional = devotionalRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Devotional not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Devotional not found with ID: " + id));
 
         request.updateEntity(devotional);
 
@@ -85,7 +86,7 @@ public class DevotionalService {
     @Transactional
     public void delete(Long id) {
         Devotional devotional = devotionalRepository.findByIdAndActiveTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Devotional not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Devotional not found with ID: " + id));
 
         devotional.setActive(false);
     }
