@@ -50,7 +50,7 @@ public class DevotionalController {
             @RequestParam(value = "status", required = false) DevotionalStatus status,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortBy", defaultValue = "created_at") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
             @RequestParam(value = "direction", defaultValue = "DESC") String direction
     ) {
         Page<DevotionalResponse> response = devotionalService.search(searchTerm, status, page, size, sortBy, direction);
@@ -92,5 +92,12 @@ public class DevotionalController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         devotionalService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countDevocional() {
+        return ResponseEntity.ok(
+                devotionalService.countDevocional()
+        );
     }
 }

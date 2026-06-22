@@ -5,7 +5,6 @@ import br.com.riverfy.dto.notice.NoticeResponse;
 import br.com.riverfy.exception.ResourceNotFoundException;
 import br.com.riverfy.model.Notice;
 import br.com.riverfy.repository.NoticeRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -64,5 +63,9 @@ public class NoticeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Notice not found with ID: " + id));
 
         notice.setActive(false);
+    }
+
+    public long countNotice() {
+        return noticeRepository.count();
     }
 }

@@ -27,4 +27,5 @@ public interface DevotionalRepository extends JpaRepository<Devotional, Long> {
             @Param("status") DevotionalStatus status,
             Pageable pageable
     );
+
 }

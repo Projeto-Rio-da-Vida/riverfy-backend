@@ -91,4 +91,11 @@ public class NoticeController {
         noticeService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countNotice() {
+        return ResponseEntity.ok(
+                noticeService.countNotice()
+        );
+    }
 }
