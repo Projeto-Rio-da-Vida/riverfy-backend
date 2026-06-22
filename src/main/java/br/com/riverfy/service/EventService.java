@@ -8,7 +8,6 @@ import br.com.riverfy.model.User;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.repository.EventRepository;
 import br.com.riverfy.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -84,5 +85,38 @@ public class EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com o ID: " + id));
 
         event.setActive(false);
+    }
+
+    public long countEvent() {
+        return eventRepository.count();
+    }
+
+    public List<EventResponse> getUpcomingEvents() {
+
+        return eventRepository
+                .findByActiveTrueAndDateGreaterThanEqualOrderByDateAsc(LocalDateTime.now())
+                .stream()
+                .map(EventResponse::fromEntity)
+                .toList();
+    }
+
+    public Event getNextEvent() {
+
+        return eventRepository.findNextEvent(
+                        LocalDateTime.now(),
+                        PageRequest.of(0, 1)
+                ).stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Event> getTodayEvents() {
+
+        LocalDate today = LocalDate.now();
+
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+
+        return eventRepository.findEventsToday(startOfDay, endOfDay);
     }
 }

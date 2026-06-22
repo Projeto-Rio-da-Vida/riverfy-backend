@@ -2,6 +2,7 @@ package br.com.riverfy.controller;
 
 import br.com.riverfy.dto.event.EventRequest;
 import br.com.riverfy.dto.event.EventResponse;
+import br.com.riverfy.model.Event;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Events", description = "Endpoints for managing events and participants.")
 @RestController
@@ -35,6 +38,8 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest request) {
+        System.out.println("BODY RECEBIDO:");
+        System.out.println(request);
         EventResponse response = eventService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -92,5 +97,36 @@ public class EventController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         eventService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countEvent() {
+        return ResponseEntity.ok(
+                eventService.countEvent()
+        );
+    }
+
+    @GetMapping("/event-desc")
+    public ResponseEntity<List<EventResponse>> upcomingEvents() {
+        return ResponseEntity.ok(eventService.getUpcomingEvents());
+    }
+
+    @GetMapping("/next")
+    public EventResponse getNextEvent() {
+        Event event = eventService.getNextEvent();
+
+        if (event == null) {
+            return null;
+        }
+
+        return EventResponse.fromEntity(event);
+    }
+
+    @GetMapping("/today")
+    public List<EventResponse> getTodayEvents() {
+        return eventService.getTodayEvents()
+                .stream()
+                .map(EventResponse::fromEntity)
+                .toList();
     }
 }
