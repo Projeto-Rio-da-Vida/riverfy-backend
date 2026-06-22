@@ -28,6 +28,7 @@ public class JwtService {
                     .withIssuer("riverfy-api")
                     .withSubject(user.getEmail())
                     .withClaim("role", user.getRole().name())
+                    .withClaim("name", user.getName())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

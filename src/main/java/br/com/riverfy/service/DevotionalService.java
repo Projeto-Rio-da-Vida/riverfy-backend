@@ -8,7 +8,6 @@ import br.com.riverfy.model.Devotional;
 import br.com.riverfy.model.DevotionalPage;
 import br.com.riverfy.model.enums.DevotionalStatus;
 import br.com.riverfy.repository.DevotionalRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -109,5 +108,9 @@ public class DevotionalService {
         page.setPageNumber(pageReq.pageNumber());
         page.setDevotional(devotional);
         return page;
+    }
+
+    public long countDevocional() {
+        return devotionalRepository.count();
     }
 }
