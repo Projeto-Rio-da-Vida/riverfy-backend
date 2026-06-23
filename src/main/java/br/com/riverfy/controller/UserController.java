@@ -1,5 +1,7 @@
 package br.com.riverfy.controller;
 
+import br.com.riverfy.dto.user.UserRequest;
+import br.com.riverfy.dto.user.UserResponse;
 import br.com.riverfy.model.User;
 import br.com.riverfy.service.UserService;
 
@@ -8,11 +10,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +55,20 @@ public class UserController {
 
         return service.findAll(search, pageable);
     }
+
+    @Operation(summary = "Update user details", description = "Updates the profile details (name and email) of an existing user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User details successfully updated."),
+            @ApiResponse(responseCode = "400", description = "Invalid request data or email conflict."),
+            @ApiResponse(responseCode = "404", description = "User not found.")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+        UserResponse response = service.update(id, request);
+        return ResponseEntity.ok(response);
+    }
+
 
         @Operation(
             summary = "Delete user",
