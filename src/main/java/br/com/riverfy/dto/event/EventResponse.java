@@ -14,11 +14,15 @@ public record EventResponse(
         String description,
         LocalDateTime date,
         EventStatus eventStatus,
-        List<UserResponse> participants
+        List<UserResponse> participants,
+        long participantsCount
 ) {
     public static EventResponse fromEntity(Event event) {
         List<UserResponse> userDTOs = null;
+        long count = 0;
+
         if (event.getParticipants() != null) {
+            count = event.getParticipants().size();
             userDTOs = event.getParticipants().stream()
                     .map(UserResponse::fromEntity)
                     .collect(Collectors.toList());
@@ -30,7 +34,8 @@ public record EventResponse(
                 event.getDescription(),
                 event.getDate(),
                 event.getEventStatus(),
-                userDTOs
+                userDTOs,
+                count
         );
     }
 }

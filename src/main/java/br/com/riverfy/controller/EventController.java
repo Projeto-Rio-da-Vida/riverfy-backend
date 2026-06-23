@@ -38,8 +38,6 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest request) {
-        System.out.println("BODY RECEBIDO:");
-        System.out.println(request);
         EventResponse response = eventService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -128,5 +126,20 @@ public class EventController {
                 .stream()
                 .map(EventResponse::fromEntity)
                 .toList();
+    }
+
+    @Operation(summary = "Confirm attendance", description = "Adds a specific user to the event's participant list.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Attendance confirmed successfully."),
+            @ApiResponse(responseCode = "404", description = "Event or User not found.")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/{id}/confirm-attendance")
+    public ResponseEntity<EventResponse> confirmAttendance(
+            @PathVariable Long id,
+            @RequestParam Long userId
+    ) {
+        EventResponse response = eventService.confirmAttendance(id, userId);
+        return ResponseEntity.ok(response);
     }
 }

@@ -8,6 +8,7 @@ import br.com.riverfy.model.User;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.repository.EventRepository;
 import br.com.riverfy.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,10 +36,7 @@ public class EventService {
     public EventResponse create(EventRequest request) {
         Event event = request.toEntity();
 
-        if (request.participantIds() != null && !request.participantIds().isEmpty()) {
-            List<User> participants = userRepository.findAllById(request.participantIds());
-            event.setParticipants(participants);
-        }
+        event.setParticipants(new ArrayList<>());
 
         Event savedEvent = eventRepository.save(event);
         return EventResponse.fromEntity(savedEvent);
@@ -118,5 +117,21 @@ public class EventService {
         LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
 
         return eventRepository.findEventsToday(startOfDay, endOfDay);
+    }
+
+    @Transactional
+    public EventResponse confirmAttendance(Long eventId, Long userId) {
+        Event event = eventRepository.findByIdAndActiveTrue(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        if (!event.getParticipants().contains(user)) {
+            event.getParticipants().add(user);
+            eventRepository.save(event);
+        }
+
+        return EventResponse.fromEntity(event);
     }
 }
