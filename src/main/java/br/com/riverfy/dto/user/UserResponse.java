@@ -2,6 +2,7 @@ package br.com.riverfy.dto.user;
 
 import br.com.riverfy.dto.category.CategoryResponse;
 import br.com.riverfy.model.User;
+import br.com.riverfy.model.enums.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public record UserResponse(
         Long id,
         String name,
         String email,
+        UserRole role,
         List<CategoryResponse> categories
 ) {
     public static UserResponse fromEntity(User user) {
@@ -24,6 +26,7 @@ public record UserResponse(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
+                user.getRole(),
                 categoryDTOs
         );
     }
