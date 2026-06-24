@@ -17,6 +17,33 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+  # --- CONFIGURAÇÃO DO CLOUDAMQP ---
+  rabbitmq:
+    host: jackal.rmq.cloudamqp.com
+    port: 5671
+    username: ekwhjkvh
+    password: buCA64ctUmK34GzW_Rc8ZQjnsCKd9obt
+    virtual-host: ekwhjkvh
+    ssl:
+      enabled: true
+
+  # --- CONFIGURAÇÃO DO SPRING MAIL ---
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: riverfyapp@gmail.com
+    password: gbhj lizj ibdr vlhf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+
+# --- CONFIGURAÇÕES DA API ---
 api:
   security:
     token:

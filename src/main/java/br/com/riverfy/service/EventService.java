@@ -1,5 +1,6 @@
 package br.com.riverfy.service;
 
+import br.com.riverfy.config.RabbitMQConfig;
 import br.com.riverfy.dto.event.EventRequest;
 import br.com.riverfy.dto.event.EventResponse;
 import br.com.riverfy.exception.ResourceNotFoundException;
@@ -8,7 +9,7 @@ import br.com.riverfy.model.User;
 import br.com.riverfy.model.enums.EventStatus;
 import br.com.riverfy.repository.EventRepository;
 import br.com.riverfy.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -25,10 +27,12 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final RabbitTemplate rabbitTemplate;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Transactional
@@ -41,6 +45,9 @@ public class EventService {
         }
 
         Event savedEvent = eventRepository.save(event);
+
+        sendNotificationForEmailMQ(savedEvent);
+
         return EventResponse.fromEntity(savedEvent);
     }
 
@@ -135,5 +142,19 @@ public class EventService {
         }
 
         return EventResponse.fromEntity(event);
+    }
+
+    private void sendNotificationForEmailMQ(Event savedEvent) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+        String formattedDate = savedEvent.getDate() != null ? savedEvent.getDate().format(formatter) : "data a definir";
+
+        String message = String.format("O evento %s foi marcado para %s. Contamos com a sua presença!",
+                savedEvent.getName(), formattedDate);
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_NAME,
+                RabbitMQConfig.ROUTING_KEY,
+                message
+        );
     }
 }
