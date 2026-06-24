@@ -38,6 +38,8 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest request) {
+        System.out.println("BODY RECEBIDO:");
+        System.out.println(request);
         EventResponse response = eventService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

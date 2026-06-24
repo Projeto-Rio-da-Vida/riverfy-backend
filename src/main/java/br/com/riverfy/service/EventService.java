@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +35,10 @@ public class EventService {
     public EventResponse create(EventRequest request) {
         Event event = request.toEntity();
 
-        event.setParticipants(new ArrayList<>());
+        if (request.participantIds() != null && !request.participantIds().isEmpty()) {
+            List<User> participants = userRepository.findAllById(request.participantIds());
+            event.setParticipants(participants);
+        }
 
         Event savedEvent = eventRepository.save(event);
         return EventResponse.fromEntity(savedEvent);

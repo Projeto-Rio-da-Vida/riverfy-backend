@@ -29,6 +29,7 @@ public class JwtService {
                     .withSubject(user.getEmail())
                     .withClaim("role", user.getRole().name())
                     .withClaim("name", user.getName())
+                    .withClaim("id", user.getId())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
